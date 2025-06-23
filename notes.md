@@ -19,3 +19,45 @@ Iniando a aplicação com um template:
 Configuração de fontes:
 - importar do google fonts
 - Incluir no `Content-Security-Policy`
+
+## Aula 5
+
+Instalar:
+```bash
+npm i -D tailwindcss @tailwindcss/postcss postcss autoprefixer
+```
+
+Criar aquivo `./src/renderer/postcss.config.js`:
+```javascript
+module.exports = {
+  plugins: {
+    '@tailwindcss/postcss': {}
+  }
+}
+```
+
+Apontar nas configurações `electron.vite.config.ts`:
+```typescript
+// imports...
+export default defineConfig({
+  // ...
+  renderer: {
+    css: {
+      postcss: './src/renderer/postcss.config.js'
+    },
+    // ...
+  }
+})
+```
+
+Criar `global.css` e importar no componente raiz:
+```css
+@import "tailwindcss";
+@import "tailwindcss/preflight"
+@tailwind utilities;
+
+@theme {
+  --font-sans: Inter, sans-serif, system-ui;
+}
+
+```

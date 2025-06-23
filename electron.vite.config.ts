@@ -10,6 +10,9 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()]
   },
   renderer: {
+    css: {
+      postcss: './src/renderer/postcss.config.js'
+    },
     resolve: {
       alias: {
         '@renderer': resolve('src/renderer/src')
