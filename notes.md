@@ -61,3 +61,9 @@ Criar `global.css` e importar no componente raiz:
 }
 
 ```
+
+## Aula 6
+Configurações tsconfig e eslint.
+
+## Aula 7
+Icones da aplicação.
