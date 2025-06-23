@@ -4,4 +4,15 @@
 
 @theme {
   --font-sans: Inter, sans-serif, system-ui;
+
+  --color-rotion-50: #ebeaed;
+  --color-rotion-100: #c1bfc7;
+  --color-rotion-200: #a3a0ac;
+  --color-rotion-300: #797486;
+  --color-rotion-400: #5f596e;
+  --color-rotion-500: #37304a;
+  --color-rotion-600: #322c43;
+  --color-rotion-700: #272235;
+  --color-rotion-800: #1e1a29;
+  --color-rotion-900: #17141f;
 }
