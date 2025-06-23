@@ -1,3 +1,3 @@
 export function App(): React.JSX.Element {
-  return <h1>Oooi mundo</h1>
+  return <h1 style={{ fontFamily: 'Inter' }}>Oooi mundo</h1>
 }
