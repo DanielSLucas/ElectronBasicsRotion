@@ -67,3 +67,10 @@ Configurações tsconfig e eslint.
 
 ## Aula 7
 Icones da aplicação.
+
+## Aula 8
+Configurando roteamento da aplicação.
+- Diferente de um app web, um app desktop pode ter várias janelas, e para cada
+uma delas seria necessário um roteamento. 
+- Para facilitar esse gerenciamento usamos a lib `electron-router-dom` junto o 
+`react-router-dom`.
