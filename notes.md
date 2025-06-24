@@ -74,3 +74,6 @@ Configurando roteamento da aplicação.
 uma delas seria necessário um roteamento. 
 - Para facilitar esse gerenciamento usamos a lib `electron-router-dom` junto o 
 `react-router-dom`.
+
+## Aula 9
+Configurando layout padrão da aplicação.
