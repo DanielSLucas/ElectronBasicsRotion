@@ -77,3 +77,6 @@ uma delas seria necessário um roteamento.
 
 ## Aula 9
 Configurando layout padrão da aplicação.
+
+## Aula 10
+Estilos da página de documento.
