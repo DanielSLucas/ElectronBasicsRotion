@@ -20,6 +20,26 @@ html {
   --color-rotion-700: #272235;
   --color-rotion-800: #1e1a29;
   --color-rotion-900: #17141f;
+
+  --animate-slide-in: slide-in 0.25s;
+  --animate-slide-out: slide-out 0.25s;
+  @keyframes slide-in {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: var(--radix-collapsible-content-width)
+    }
+  }
+
+  @keyframes slide-out {
+    0% {
+      width: var(--radix-collapsible-content-width)
+    }
+    100% {
+      width: 0;
+    }
+  }
 }
 
 @utility region-drag {

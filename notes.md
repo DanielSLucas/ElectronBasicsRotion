@@ -85,3 +85,6 @@ Estilos da página de documento.
 Configurando o editor de texto com a lib `tiptap`.
 - foi necessário também adcionar o `@plugin "@tailwindcss/typography";` para aplicar
 uma formatação padrão nos elementos de texto do editor
+
+## Aula 12
+Adicionando o comportamento colapsável à sidebar com `@radix-ui/react-collapsible`.
