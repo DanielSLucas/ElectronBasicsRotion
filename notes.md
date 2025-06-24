@@ -80,3 +80,8 @@ Configurando layout padrão da aplicação.
 
 ## Aula 10
 Estilos da página de documento.
+
+## Aula 11
+Configurando o editor de texto com a lib `tiptap`.
+- foi necessário também adcionar o `@plugin "@tailwindcss/typography";` para aplicar
+uma formatação padrão nos elementos de texto do editor
