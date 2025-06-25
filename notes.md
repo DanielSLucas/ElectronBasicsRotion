@@ -107,3 +107,10 @@ Referente a armazemento e back-end, o electron, na maioria das vezes não difere
 de uma aplicação web tradicional, em que o back-end é separado e diponibilizado através de uma 
 API Rest. Porém, sendo uma aplicação desktop, temos opções de armazenamento local e back-end 
 já incluso na aplicação electron. E é esse caminho que vamos seguir
+
+## Aula 16
+Dentre os caminhos que podemos seguir quando falamos de armazenamento local, poderiamos 
+guardar os dados nos sistema de arquivos, como um arquivo sqlite, json, ou mesmo usar
+os armazenamentos do navegador como o `localstorage` ou o `indexDB`. Porém em nosso caso
+apenas para fins de aprender mais sobre o electron vamos utilizar o `electron-store` que 
+é baseado em json.

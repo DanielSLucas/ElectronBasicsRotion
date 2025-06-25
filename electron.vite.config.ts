@@ -15,7 +15,7 @@ export default defineConfig({
       'process.platform': JSON.stringify(process.platform),
     },
     css: {
-      postcss: './src/renderer/postcss.config.js',
+      postcss: './src/renderer/postcss.config.mjs',
     },
     resolve: {
       alias: {

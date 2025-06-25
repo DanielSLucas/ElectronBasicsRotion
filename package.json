@@ -6,6 +6,7 @@
   "main": "./out/main/index.js",
   "author": "example.com",
   "homepage": "https://electron-vite.org",
+  "type": "module",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache . --fix",
@@ -35,6 +36,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "electron-router-dom": "^2.1.0",
+    "electron-store": "^10.1.0",
     "phosphor-react": "^1.4.1",
     "react-router-dom": "^7.6.2"
   },
