@@ -114,3 +114,6 @@ guardar os dados nos sistema de arquivos, como um arquivo sqlite, json, ou mesmo
 os armazenamentos do navegador como o `localstorage` ou o `indexDB`. Porém em nosso caso
 apenas para fins de aprender mais sobre o electron vamos utilizar o `electron-store` que 
 é baseado em json.
+
+## Aula 17
+Estruturando o IPC handlers, movendo nomes de eventos e tipagens para pacote `shared`.

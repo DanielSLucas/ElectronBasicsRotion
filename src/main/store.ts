@@ -10,4 +10,4 @@ export const store = new Store<StoreType>({
   },
 })
 
-console.log(store.path) // caminho para o json que armazena os dados
+// console.log(store.path) // caminho para o json que armazena os dados
