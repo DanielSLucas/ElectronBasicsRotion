@@ -127,3 +127,6 @@ Conectando com o store
 ## Aula 20
 Criando documento ao clicar em `Novo documento`, e manipulando o resultado da query 'documents'
 para atualizar o menu da sidebar assim que um novo documento for criado.
+
+## Aula 21
+Buscando os dados do documento por página.
