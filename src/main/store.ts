@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Store from 'electron-store'
+import { Document } from '../shared/types/ipc'
 
-interface StoreType {
-  documents: Record<string, any>
+type StoreType = {
+  documents: Record<string, Document>
 }
 
-export const store = new Store<StoreType>({
+export const store: any = new Store<StoreType>({
   defaults: {
     documents: {},
   },

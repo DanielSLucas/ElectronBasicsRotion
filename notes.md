@@ -120,3 +120,6 @@ Estruturando o IPC handlers, movendo nomes de eventos e tipagens para pacote `sh
 
 ## Aula 18
 Estruturando CRUD via IPC.
+
+## Aula 19
+Conectando com o store
