@@ -101,3 +101,9 @@ Exemplo de implementação no commit 654b00df.
 
 ## Aula 14
 Configurando o `@tanstack/react-query` para fazer o fetch de dados entre `main` e `redender`.
+
+## Aula 15
+Referente a armazemento e back-end, o electron, na maioria das vezes não difere do funcionamento
+de uma aplicação web tradicional, em que o back-end é separado e diponibilizado através de uma 
+API Rest. Porém, sendo uma aplicação desktop, temos opções de armazenamento local e back-end 
+já incluso na aplicação electron. E é esse caminho que vamos seguir
