@@ -1,9 +1,10 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join, resolve } from 'node:path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { registerRoute } from '../lib/electron-router-dom'
 
 import icon from '../../resources/icon.png'
+import './ipc'
 
 function createWindow(): void {
   // Create the browser window.

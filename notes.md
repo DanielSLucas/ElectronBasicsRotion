@@ -88,3 +88,12 @@ uma formatação padrão nos elementos de texto do editor
 
 ## Aula 12
 Adicionando o comportamento colapsável à sidebar com `@radix-ui/react-collapsible`.
+
+## Aula 13
+Como comentado anteriomente a arquitetura do electron é dividida em [processos](https://www.electronjs.org/docs/latest/tutorial/process-model),
+sendo o **main** o processo principal, o **renderer** o processo responsável pelo front-end
+e o **preload** responsável por fazer a ponte de comunicação entre os dois.
+
+A comunicação entre processos é chamada de *inter-process communication* (IPC) e ela pode
+ser feita de algumas maneiras, conforme a [documentação do electron](https://www.electronjs.org/docs/latest/tutorial/ipc).
+
