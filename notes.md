@@ -130,3 +130,6 @@ para atualizar o menu da sidebar assim que um novo documento for criado.
 
 ## Aula 21
 Buscando os dados do documento por página.
+
+## Aula 22
+Apagar documento.
