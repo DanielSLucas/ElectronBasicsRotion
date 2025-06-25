@@ -117,3 +117,6 @@ apenas para fins de aprender mais sobre o electron vamos utilizar o `electron-st
 
 ## Aula 17
 Estruturando o IPC handlers, movendo nomes de eventos e tipagens para pacote `shared`.
+
+## Aula 18
+Estruturando CRUD via IPC.
