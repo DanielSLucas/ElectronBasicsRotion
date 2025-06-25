@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'phosphor-react'
+import { useNavigate } from 'react-router-dom'
 import { Document } from '~/src/shared/types/ipc'
 
 export function CreatePage() {
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
 
   const { isPending, mutateAsync: createDocument } = useMutation({
@@ -20,6 +22,8 @@ export function CreatePage() {
           return [data]
         }
       })
+
+      navigate(`/documents/${data.id}`)
     },
   })
 
