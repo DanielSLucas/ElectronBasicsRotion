@@ -10,9 +10,8 @@ declare global {
 
 // Custom APIs for renderer
 const api = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  fetchDocuments(args: any) {
-    return ipcRenderer.invoke('fetch-documents', args)
+  fetchDocuments(): Promise<{ id: string, title: string }[]> {
+    return ipcRenderer.invoke('fetch-documents')
   },
 }
 

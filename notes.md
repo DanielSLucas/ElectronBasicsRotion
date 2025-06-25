@@ -97,3 +97,7 @@ e o **preload** responsável por fazer a ponte de comunicação entre os dois.
 A comunicação entre processos é chamada de *inter-process communication* (IPC) e ela pode
 ser feita de algumas maneiras, conforme a [documentação do electron](https://www.electronjs.org/docs/latest/tutorial/ipc).
 
+Exemplo de implementação no commit 654b00df.
+
+## Aula 14
+Configurando o `@tanstack/react-query` para fazer o fetch de dados entre `main` e `redender`.
