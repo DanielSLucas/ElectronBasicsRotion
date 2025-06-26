@@ -136,3 +136,7 @@ Apagar documento.
 
 ## Aula 23
 Edição de documento.
+
+## Aula 24
+Criando menu de tray, menu que aparece ao clicar no ícnoe da aplicação no barra
+de tarefas.

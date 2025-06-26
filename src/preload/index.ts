@@ -40,8 +40,6 @@ if (process.contextIsolated) {
     console.error(error)
   }
 } else {
-  // @ts-expect-error dts
   window.electron = electronAPI
-  // @ts-expect-error dts
   window.api = api
 }
