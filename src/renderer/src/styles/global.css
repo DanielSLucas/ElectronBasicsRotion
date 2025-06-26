@@ -3,10 +3,6 @@
 @tailwind utilities;
 @plugin "@tailwindcss/typography";
 
-html {
-  overflow: hidden;
-}
-
 @theme {
   --font-sans: Inter, sans-serif, system-ui;
 
@@ -23,6 +19,7 @@ html {
 
   --animate-slide-in: slide-in 0.25s;
   --animate-slide-out: slide-out 0.25s;
+
   @keyframes slide-in {
     0% {
       width: 0;
@@ -47,4 +44,37 @@ html {
 }
 @utility region-no-drag {
   -webkit-app-region: drag;
+}
+
+html {
+  overflow: hidden;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rotion-600) var(--color-rotion-800); /* thumb & track */
+}
+
+/* Others */
+html::-webkit-scrollbar {
+  width: 6px;
+}
+
+html::-webkit-scrollbar-button {
+  display: none;
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--color-rotion-800);
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: var(--color-rotion-600);
+  border-radius: 10px;
+  border: 2px solid var(--color-rotion-800);
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-rotion-500);
 }

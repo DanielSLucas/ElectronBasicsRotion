@@ -15,7 +15,6 @@ export function Sidebar() {
     queryKey: ['documents'],
     queryFn: async () => {
       const response = await window.api.fetchDocuments()
-      console.log(response)
       return response.data
     },
   })

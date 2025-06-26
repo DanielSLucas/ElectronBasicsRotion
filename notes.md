@@ -147,3 +147,6 @@ main para o renderer. (`tray.ts`)
 
 ## Aula 26
 Criação de atalhos globais. Olhar arquivo `shortcuts.ts`.
+
+## Aula 27
+Busca de documentos com a lib `cmdk`.
