@@ -140,3 +140,7 @@ Edição de documento.
 ## Aula 24
 Criando menu de tray, menu que aparece ao clicar no ícnoe da aplicação no barra
 de tarefas.
+
+## Aula 25
+Criando documentos a partir do menu de tray e fazendo a comunicação ipc do processo
+main para o renderer.

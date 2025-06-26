@@ -6,7 +6,7 @@ import { registerRoute } from '../lib/electron-router-dom'
 import icon from '../../resources/icon.png'
 import './ipc'
 import './store'
-import './tray'
+import { createTray } from './tray'
 
 function createWindow(): void {
   // Create the browser window.
@@ -28,6 +28,8 @@ function createWindow(): void {
       sandbox: false,
     },
   })
+
+  createTray(mainWindow)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
