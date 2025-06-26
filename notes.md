@@ -139,8 +139,11 @@ Edição de documento.
 
 ## Aula 24
 Criando menu de tray, menu que aparece ao clicar no ícnoe da aplicação no barra
-de tarefas.
+de tarefas. (`tray.ts`)
 
 ## Aula 25
 Criando documentos a partir do menu de tray e fazendo a comunicação ipc do processo
-main para o renderer.
+main para o renderer. (`tray.ts`)
+
+## Aula 26
+Criação de atalhos globais. Olhar arquivo `shortcuts.ts`.
