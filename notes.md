@@ -150,3 +150,14 @@ Criação de atalhos globais. Olhar arquivo `shortcuts.ts`.
 
 ## Aula 27
 Busca de documentos com a lib `cmdk`.
+
+## Aula 28
+Para fazer o build da aplicação usaremos o [electron-builder](https://www.electron.build),
+com isso conseguiremos criar os executáveis da aplicação.
+
+Um ponto de atenção é, podemos sim apenas fazer o build e disponibilizar para download
+porém ao ser executado o app será apontado como não confiável pois não é uma aplicação
+assinada, não tem um certificado.
+
+A emissão de um certificado é necessária em caso de publicação em lojas oficiais ou mesmo
+para fazer o uso do electron-updater, que faz atualizações automáticas da aplicação.
