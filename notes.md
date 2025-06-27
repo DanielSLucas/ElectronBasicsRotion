@@ -161,3 +161,6 @@ assinada, não tem um certificado.
 
 A emissão de um certificado é necessária em caso de publicação em lojas oficiais ou mesmo
 para fazer o uso do electron-updater, que faz atualizações automáticas da aplicação.
+
+## Aula 29
+Realizando o build manual da aplicação com o comando `npm run build:win`
