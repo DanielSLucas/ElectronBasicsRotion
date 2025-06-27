@@ -3,11 +3,13 @@ import Store from 'electron-store'
 import { Document } from '../shared/types/ipc'
 
 type StoreType = {
-  documents: Record<string, Document>
+  workDir: string;
+  documents: Record<string, Document>;
 }
 
 export const store: any = new Store<StoreType>({
   defaults: {
+    workDir: '',
     documents: {},
   },
 })

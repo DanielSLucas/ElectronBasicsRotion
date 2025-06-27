@@ -17,6 +17,12 @@ declare global {
 
 // Custom APIs for renderer
 const api = {
+  getWorkDir(): Promise<string> {
+    return ipcRenderer.invoke(IPC.WORK_DIR.GET)
+  },
+  setWorkDir(): Promise<string> {
+    return ipcRenderer.invoke(IPC.WORK_DIR.SET)
+  },
   fetchDocuments(): Promise<FetchAllDocumentsResponse> {
     return ipcRenderer.invoke(IPC.DOCUMENTS.FETCH_ALL)
   },

@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron'
+import { dialog, ipcMain } from 'electron'
 import { IPC } from '@shared/constants/ipc'
 import {
   CreateDocumentResponse,
@@ -10,7 +10,30 @@ import {
 } from '@shared/types/ipc'
 import { store } from './store'
 import { randomUUID } from 'node:crypto'
-import { title } from 'node:process'
+
+ipcMain.handle(
+  IPC.WORK_DIR.GET,
+  async (): Promise<string> => {
+    return store.get('workDir')
+  },
+)
+
+ipcMain.handle(
+  IPC.WORK_DIR.SET,
+  async (): Promise<string> => {
+    const folder = await dialog.showOpenDialog({
+      properties: ['openDirectory'],
+    })
+
+    const folderPath = folder?.filePaths?.[0] || ''
+
+    if (folderPath) {
+      store.set('workDir', folderPath)
+    }
+
+    return folderPath
+  },
+)
 
 ipcMain.handle(
   IPC.DOCUMENTS.FETCH_ALL,
