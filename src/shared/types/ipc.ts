@@ -1,3 +1,28 @@
+/* eslint-disable no-unused-vars */
+export enum FType {
+  FILE = 'FILE',
+  FOLDER = 'FOLDER',
+}
+
+export type FBase = {
+  id: string;
+  name: string;
+  path: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type FFile = FBase & {
+  type: FType.FILE
+}
+
+export type FFolder = FBase & {
+  type: FType.FOLDER;
+  content: FEntry[];
+}
+
+export type FEntry = FFile | FFolder
+
 export type Document = {
   id: string;
   title: string;
@@ -17,7 +42,7 @@ export type DeleteDocumentRequest = {
 
 // RESPONSE
 export type FetchAllDocumentsResponse = {
-  data: Document[];
+  data: FEntry[];
 }
 
 export type FetchDocumentResponse = {

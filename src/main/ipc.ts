@@ -10,6 +10,7 @@ import {
 } from '@shared/types/ipc'
 import { store } from './store'
 import { randomUUID } from 'node:crypto'
+import { getDirContent } from './file_handling'
 
 ipcMain.handle(
   IPC.WORK_DIR.GET,
@@ -38,8 +39,10 @@ ipcMain.handle(
 ipcMain.handle(
   IPC.DOCUMENTS.FETCH_ALL,
   async (): Promise<FetchAllDocumentsResponse> => {
+    const workDir = store.get('workDir')
+
     return {
-      data: Object.values(store.get('documents')),
+      data: await getDirContent(workDir),
     }
   },
 )
