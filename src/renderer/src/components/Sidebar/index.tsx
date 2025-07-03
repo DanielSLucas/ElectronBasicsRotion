@@ -7,6 +7,7 @@ import { CreatePage } from './CreatePage'
 import { Profile } from './Profile'
 import { Search } from './Search'
 import { useQuery } from '@tanstack/react-query'
+import { FType } from '~/src/shared/types/ipc'
 
 export function Sidebar() {
   const isMacOS = process.platform === 'darwin'
@@ -55,11 +56,20 @@ export function Sidebar() {
           <Navigation.Section>
             <Navigation.SectionTitle>Workspace</Navigation.SectionTitle>
             <Navigation.SectionContent>
-              {data?.map(f => (
-                <Navigation.Link to={`/documents/${f.id}`} key={f.id}>
-                  {f.name.split('.')[0]}
-                </Navigation.Link>
-              ))}
+              {data?.map(f => f.type === FType.FOLDER
+                ? (
+                  <Navigation.CollapsibleSection
+                    key={f.id}
+                    name={f.name.split('.')[0]}
+                    content={f.content}
+                  />
+                  )
+                : (
+                  <Navigation.Link to={`/documents/${f.id}`} key={f.id}>
+                    {f.name.split('.')[0]}
+                  </Navigation.Link>
+                  ),
+              )}
             </Navigation.SectionContent>
           </Navigation.Section>
         </Navigation.Root>
