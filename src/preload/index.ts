@@ -26,7 +26,7 @@ const api = {
   fetchDocuments(): Promise<FetchAllDocumentsResponse> {
     return ipcRenderer.invoke(IPC.DOCUMENTS.FETCH_ALL)
   },
-  fetchDocument(req: FetchDocumentRequest) : Promise<FetchDocumentResponse> {
+  fetchDocument(req: FetchDocumentRequest) : Promise<FetchDocumentResponse | null> {
     return ipcRenderer.invoke(IPC.DOCUMENTS.FETCH, req)
   },
   createDocument() : Promise<CreateDocumentResponse> {

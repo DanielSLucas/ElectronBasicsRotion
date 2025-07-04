@@ -25,12 +25,15 @@ export type FEntry = FFile | FFolder
 
 export type Document = {
   id: string;
-  title: string;
-  content?: string;
+  name: string;
+  content: string;
+  path: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // RESQUEST
-export type SaveDocumentRequest = Document
+export type SaveDocumentRequest = Pick<Document, 'id' | 'name' | 'content'>
 
 export type FetchDocumentRequest = {
   id: string;
@@ -50,5 +53,5 @@ export type FetchDocumentResponse = {
 }
 
 export type CreateDocumentResponse = {
-  data: Document;
+  data: FFile;
 }
