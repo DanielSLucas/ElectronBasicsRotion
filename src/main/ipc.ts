@@ -9,14 +9,8 @@ import {
   SaveDocumentRequest,
 } from '@shared/types/ipc'
 import { store } from './store'
-import { 
-  createDocument,
-  deleteDocument,
-  flattenFiles,
-  getDirContent,
-  getFileContent,
-  updateDocument 
-} from './file_handling'
+import { randomUUID } from 'node:crypto'
+import { getDirContent } from './file_handling'
 
 ipcMain.handle(
   IPC.WORK_DIR.GET,
@@ -55,26 +49,11 @@ ipcMain.handle(
 
 ipcMain.handle(
   IPC.DOCUMENTS.FETCH,
-  async (_, { id }: FetchDocumentRequest): Promise<FetchDocumentResponse | null> => {
-    const workDir = store.get('workDir')
-    const dirContent = await getDirContent(workDir);
-
-    const files = flattenFiles(dirContent);
-    const file = files.find(f => f.id === id)
-
-    if (!file) {
-      dialog.showErrorBox("NOT FOUND", "File not found")
-      return null;
-    }
-
-    const fileContent = await getFileContent(file.path)
+  async (_, { id }: FetchDocumentRequest): Promise<FetchDocumentResponse> => {
+    const document = store.get(`documents.${id}`)
 
     return {
-      data: {
-        ...file,
-        name: file.name.split(".")[0],
-        content: fileContent
-      },
+      data: document,
     }
   },
 )
@@ -82,13 +61,12 @@ ipcMain.handle(
 ipcMain.handle(
   IPC.DOCUMENTS.CREATE,
   async (): Promise<CreateDocumentResponse> => {
-    const workDir = store.get('workDir')
-    const dirContent = await getDirContent(workDir);
+    const doc = {
+      id: randomUUID(),
+      title: 'Untitled',
+    }
 
-    const untitledFiles = flattenFiles(dirContent)
-      .filter(f => f.name.split(".")[0].toLowerCase() === "untitled")
-
-    const doc = await createDocument(workDir, `Untitled ${untitledFiles.length + 1}`)
+    store.set(`documents.${doc.id}`, doc)
 
     return {
       data: doc,
@@ -98,34 +76,16 @@ ipcMain.handle(
 
 ipcMain.handle(
   IPC.DOCUMENTS.SAVE,
-  async (_, { id, name, content }: SaveDocumentRequest): Promise<void> => {
-    const workDir = store.get('workDir')
-    const dirContent = await getDirContent(workDir)
-    const files = flattenFiles(dirContent)
-    const file = files.find(f => f.id === id)
-
-    if (!file) {
-      dialog.showErrorBox("NOT FOUND", "File not found")
-      return
-    }
-
-    await updateDocument(file.path, name, content)
+  async (_, { id, title, content }: SaveDocumentRequest): Promise<void> => {
+    store.set(`documents.${id}`, {
+      id, title, content,
+    })
   },
 )
 
 ipcMain.handle(
   IPC.DOCUMENTS.DELETE,
   async (_, { id }: DeleteDocumentRequest): Promise<void> => {
-    const workDir = store.get('workDir')
-    const dirContent = await getDirContent(workDir)
-    const files = flattenFiles(dirContent)
-    const file = files.find(f => f.id === id)
-
-    if (!file) {
-      dialog.showErrorBox("NOT FOUND", "File not found")
-      return
-    }
-
-    deleteDocument(file.path)
+    store.delete(`documents.${id}`)
   },
 )
