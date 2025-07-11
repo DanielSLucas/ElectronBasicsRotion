@@ -34,11 +34,11 @@ export function Header({ isSidebarOpen }: HeaderProps) {
     <div
       id="header"
       className={clsx(
-        'border-b h-14 border-rotion-600 py-[1.125rem] px-6 flex items-center gap-4 leading-tight transition-all duration-250 region-drag',
+        'border-b h-14 max-h-14 border-rotion-600 py-[1.125rem] px-6 flex items-center gap-4 leading-tight transition-all duration-250 region-drag',
         {
           'pl-24': !isSidebarOpen && isMacOS,
-          'w-screen': !isSidebarOpen,
-          'w-[calc(100vw-240px)]': isSidebarOpen,
+          'w-full': !isSidebarOpen,
+          'flex-1': isSidebarOpen,
         },
       )}
     >

@@ -1,5 +1,4 @@
 import { PaperPlaneRight } from "phosphor-react";
-import { title } from "process";
 import { useState } from "react";
 
 type ChatMessage = {
@@ -47,23 +46,23 @@ export function Chat() {
   };
 
   return (
-    <main className="flex-1 flex py-12 px-10 gap-10">
-      <aside className="w-1/6 hidden lg:block sticky top-0">
+    <main className="flex flex-1 min-h-0 overflow-y-auto">
+      <aside className="w-1/6 hidden lg:block sticky top-0 ml-10 py-12">
         <span className="text-rotion-300 font-semibold px-2">
           Chats
         </span>
        
         <div className="flex flex-col items-start mt-2">
           {conversations.map(conversation => (
-            <div key={conversation.id} className="flex items-center text-sm gap-2 text-rotion-100 hover:text-rotion-50 py-1 px-2 w-1/1 rounded group hover:bg-rotion-700">
+            <div key={conversation.id} className="flex items-center text-sm gap-2 text-rotion-100 hover:text-rotion-50 py-1 px-2 w-full rounded group hover:bg-rotion-700">
               {conversation.title}
             </div>
           ))}
         </div>
       </aside>
       
-      <section className="relative w-full flex flex-col items-center justify-end">
-        <div className="w-full p-2 flex-1 flex flex-col gap-8 max-h-[85vh] overflow-y-auto">
+      <section className="w-5/6 flex flex-col items-center ml-10 flex-1 min-h-0 mr-10">
+        <div className="w-full pt-12 px-4 flex-1 flex flex-col gap-4">
           {messages.map(msg => 
             msg.kind === "USER"
             ? (
@@ -83,16 +82,16 @@ export function Chat() {
           )}
         </div>
 
-        <div className="w-3/5 sticky bottom-5">
+        <div className="w-full sticky bottom-0 pb-5 bg-rotion-900">
           <form 
-            className="relative flex items-center justify-between w-1/1 bg-rotion-700 rounded-2xl"
+            className="relative flex items-center justify-between w-full bg-rotion-700 rounded-2xl"
             onSubmit={handleSubmit}
           >
             <textarea
               value={newMessage}
               onChange={e => setNewMessage(e.target.value)}
               placeholder="Pergunte alguma coisa"
-              className="w-1/1 h-6 p-5 overflow-hidden resize-y min-h-16 max-h-100"
+              className="w-full h-6 p-5 overflow-hidden resize-y min-h-16 max-h-100"
               onKeyDown={e => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
