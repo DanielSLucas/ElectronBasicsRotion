@@ -13,12 +13,8 @@ type ChatConversation = {
 }
 
 export function Chat() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: '1', kind: 'USER', content: 'Hello, AI!' },
-    { id: '2', kind: 'AI', content: 'Hello! How can I help you today?' },
-    { id: '3', kind: 'USER', content: 'Tell me a joke.' },
-    { id: '4', kind: 'AI', content: 'Why did the developer go broke? Because he used up all his cache.' },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(false);
   const [conversations, setConversations] = useState<ChatConversation[]>([
     { id: 'conv1', title: 'General Chat' },
     { id: 'conv2', title: 'Jokes' },
@@ -26,23 +22,55 @@ export function Chat() {
   ]);
   const [newMessage, setNewMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const nextKind: 'USER' | 'AI' =
-      messages.length === 0
-        ? 'USER'
-        : messages[messages.length - 1].kind === 'USER'
-        ? 'AI'
-        : 'USER';
+    if (!newMessage.trim()) return;
 
-    const newMsg: ChatMessage = {
+    const userMsg: ChatMessage = {
       id: (messages.length + 1).toString(),
-      kind: nextKind,
+      kind: 'USER',
       content: newMessage
     };
+    setMessages(prev => [...prev, userMsg, {
+      id: (messages.length + 2).toString(),
+      kind: 'AI',
+      content: 'Carregando...'
+    }]);
+    setLoading(true);
+    setNewMessage("");
 
-    setMessages([...messages, newMsg]);
-    setNewMessage("")
+    const apiMessages = [...messages, userMsg].map(m => ({
+      role: m.kind === 'USER' ? 'user' : 'assistant',
+      content: m.content
+    }));
+
+    try {
+      const res = await fetch('http://localhost:9099/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          messages: apiMessages,
+          model: 'default' // ajuste conforme necessário
+        })
+      });
+      const data = await res.json();
+      const aiContent = data?.choices?.[0]?.message?.content || "Erro ao obter resposta.";
+      setMessages(prev => prev.map(m =>
+        m.content === 'Carregando...'
+          ? { ...m, content: aiContent }
+          : m
+      ));
+    } catch (err) {
+      setMessages(prev => prev.map(m =>
+        m.content === 'Carregando...'
+          ? { ...m, content: 'Erro ao conectar à IA.' }
+          : m
+      ));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -77,6 +105,9 @@ export function Chat() {
                 <p>
                   {msg.content}
                 </p>
+                {msg.content === 'Carregando...' && (
+                  <span className="text-xs text-rotion-300">Carregando...</span>
+                )}
               </article>
             )
           )}

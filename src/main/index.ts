@@ -8,6 +8,7 @@ import './ipc'
 import './store'
 import { createTray } from './tray'
 import { createShortcuts } from './shortcuts'
+import { LlmServer } from './llm'
 
 function createWindow(): void {
   // Create the browser window.
@@ -53,6 +54,8 @@ if (process.platform === 'darwin') {
   app.dock?.setIcon(resolve(__dirname, 'icon.png'))
 }
 
+const server = new LlmServer("Qwen3-8B-Q4_K_M.gguf", "9099")
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -71,6 +74,7 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
+  server.start()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -84,6 +88,7 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    server.stop()
     app.quit()
   }
 })

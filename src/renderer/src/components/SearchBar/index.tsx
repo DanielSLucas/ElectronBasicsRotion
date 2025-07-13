@@ -66,7 +66,7 @@ export function SearchBar({ open, onOpenChange }: SearchBarProps) {
             className="py-3 px-4 text-rotion-50 text-sm flex items-center gap-2 hover:bg-rotion-700 aria-selected:!bg-rotion-600"
           >
             <File className="w-4 h-4" />
-            {doc.title}
+            {doc.name}
           </Command.Item>
         ))}
       </Command.List>

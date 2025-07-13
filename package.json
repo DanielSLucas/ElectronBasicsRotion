@@ -34,6 +34,7 @@
     "@tiptap/extension-typography": "^2.22.3",
     "@tiptap/react": "^2.22.3",
     "@tiptap/starter-kit": "^2.22.3",
+    "app-root-dir": "^1.0.2",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "electron-router-dom": "^2.1.0",
@@ -48,6 +49,7 @@
     "@rocketseat/eslint-config": "3.0.12",
     "@tailwindcss/postcss": "^4.1.10",
     "@tailwindcss/typography": "^0.5.16",
+    "@types/app-root-dir": "^0.1.4",
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.2",
@@ -62,5 +64,16 @@
     "typescript": "^5.8.3",
     "vite": "^6.2.6",
     "vite-tsconfig-paths": "^5.1.4"
+  },
+  "build": {
+    "extraFiles": [
+      {
+        "from": "resources/win",
+        "to": "Resources/bin",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
   }
 }
