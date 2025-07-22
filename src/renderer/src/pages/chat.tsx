@@ -34,7 +34,7 @@ export function Chat() {
     setMessages(prev => [...prev, userMsg, {
       id: (messages.length + 2).toString(),
       kind: 'AI',
-      content: 'Carregando...'
+      content: ''
     }]);
     setLoading(true);
     setNewMessage("");
@@ -51,17 +51,40 @@ export function Chat() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          stream: true,
           messages: apiMessages,
           model: 'default' // ajuste conforme necessário
         })
       });
-      const data = await res.json();
-      const aiContent = data?.choices?.[0]?.message?.content || "Erro ao obter resposta.";
-      setMessages(prev => prev.map(m =>
-        m.content === 'Carregando...'
-          ? { ...m, content: aiContent }
-          : m
-      ));
+
+      setLoading(false);
+
+      const decoder = new TextDecoder('utf-8');
+      const readable = res.body!.getReader();
+      
+      while (true) {
+        const { done, value } = await readable!.read()
+
+        if (done) break;
+
+        const data = decoder.decode(value).match(/^data:\s(.+)/)
+        const dataObj = JSON.parse(data![1])
+        const newSlice = dataObj.choices[0].delta.content
+
+        console.log({ newSlice })
+
+        if (!newSlice) continue;
+
+        setMessages(prev => {
+          const lastMessage = prev[prev.length-1] 
+            ? {...prev[prev.length-1]}
+            : {id: (messages.length + 2).toString(), kind: 'AI', content: ""} as ChatMessage
+
+          Object.assign(lastMessage, { content: lastMessage.content + newSlice })
+
+          return [...prev.slice(0, prev.length-1), lastMessage]
+        })
+      }
     } catch (err) {
       setMessages(prev => prev.map(m =>
         m.content === 'Carregando...'
@@ -94,20 +117,20 @@ export function Chat() {
           {messages.map(msg => 
             msg.kind === "USER"
             ? (
-              <article key={msg.id} className="max-w-3/5 self-end bg-rotion-700 p-2 rounded-xl">
+              <article key={msg.id} className="max-w-full self-end bg-rotion-700 p-2 rounded-xl">
                 <p>
                   {msg.content}
                 </p>
               </article>
             )
             : (
-              <article key={msg.id} className="max-w-3/5 self-start">
+              <article key={msg.id} className="max-w-full self-start">
+                {loading && (
+                  <span className="text-xs text-rotion-300">Carregando...</span>
+                )}
                 <p>
                   {msg.content}
                 </p>
-                {msg.content === 'Carregando...' && (
-                  <span className="text-xs text-rotion-300">Carregando...</span>
-                )}
               </article>
             )
           )}

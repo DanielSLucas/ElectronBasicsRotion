@@ -14,7 +14,6 @@ export function SearchBar({ open, onOpenChange }: SearchBarProps) {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      console.log(e)
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         onOpenChange(!open)
