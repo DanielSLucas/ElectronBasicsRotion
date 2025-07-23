@@ -1,7 +1,7 @@
 import { ChatDots } from 'phosphor-react'
 import { useNavigate } from 'react-router-dom'
 
-export function Chat() {
+export function ChatButton() {
   const navigate = useNavigate()
 
   return (

@@ -8,7 +8,7 @@ import { Profile } from './Profile'
 import { Search } from './Search'
 import { useQuery } from '@tanstack/react-query'
 import { FType } from '~/src/shared/types/ipc'
-import { Chat } from './Chat'
+import { ChatButton } from './ChatButton'
 
 export function Sidebar() {
   const isMacOS = process.platform === 'darwin'
@@ -53,7 +53,7 @@ export function Sidebar() {
         <Profile />
         <div className='flex flex-col gap-1'>
           <Search />
-          <Chat />
+          <ChatButton />
         </div>
 
         <Navigation.Root>
