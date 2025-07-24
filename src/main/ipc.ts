@@ -1,4 +1,4 @@
-import { dialog, ipcMain } from 'electron'
+import { BrowserWindow, dialog, ipcMain } from 'electron'
 import { IPC } from '@shared/constants/ipc'
 import {
   CreateDocumentResponse,
@@ -76,7 +76,7 @@ ipcMain.handle(
 
 ipcMain.handle(
   IPC.DOCUMENTS.SAVE,
-  async (_, { id, title, content }: SaveDocumentRequest): Promise<void> => {
+  async (_, { id, name: title, content }: SaveDocumentRequest): Promise<void> => {
     store.set(`documents.${id}`, {
       id, title, content,
     })
@@ -89,3 +89,40 @@ ipcMain.handle(
     store.delete(`documents.${id}`)
   },
 )
+
+export function createChatHandler(window: BrowserWindow) {
+  ipcMain.handle(
+    IPC.CHAT.STREAM_START,
+    async (_, messages: {role: string; content: string}[]): Promise<void> => {
+      const res = await fetch('http://localhost:9099/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          stream: true,
+          messages,
+          model: 'default'
+        })
+      });
+      
+      const decoder = new TextDecoder('utf-8');
+      const readable = res.body!.getReader()
+
+      while (true) {
+        const { done, value } = await readable!.read();
+        if (done) break;
+
+        const data = decoder.decode(value).match(/^data:\s(.+)/);
+        const dataObj = JSON.parse(data![1]);
+        const newSlice = dataObj.choices[0].delta.content;
+
+        if (!newSlice) continue;
+        
+        window.webContents.send(IPC.CHAT.STREAM_CHUNK, newSlice)
+      }
+
+      window.webContents.send(IPC.CHAT.STREAM_END)
+    }
+  )
+}

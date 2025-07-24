@@ -44,6 +44,21 @@ const api = {
       ipcRenderer.off('new-document', callback)
     }
   },
+  startChatStream(messages: { role: string, content: string }[]) {
+    return ipcRenderer.invoke(IPC.CHAT.STREAM_START, messages)
+  },
+  onChatStreamChunk(callback: (_: any, chunk: string) => void) {
+    ipcRenderer.on(IPC.CHAT.STREAM_CHUNK, callback)
+    return () => {
+      ipcRenderer.off(IPC.CHAT.STREAM_CHUNK, callback)
+    }
+  },
+  onChatStreamEnd(callback: () => void) {
+    ipcRenderer.on(IPC.CHAT.STREAM_END, callback)
+    return () => {
+      ipcRenderer.off(IPC.CHAT.STREAM_END, callback)
+    }
+  }
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to
