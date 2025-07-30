@@ -113,16 +113,23 @@ export function createChatHandler(window: BrowserWindow) {
         const { done, value } = await readable!.read();
         if (done) break;
 
-        const data = decoder.decode(value).match(/^data:\s(.+)/);
-        const dataObj = JSON.parse(data![1]);
-        const newSlice = dataObj.choices[0].delta.content;
+        const data = decoder.decode(value);
+        const lines = data.split(/^data:\s/m);
 
-        if (!newSlice) continue;
-        
-        window.webContents.send(IPC.CHAT.STREAM_CHUNK, newSlice)
+        for (const line of lines) {
+          if (!line || line === "[DONE]\n\n") continue;
+
+          const dataObj = JSON.parse(line);
+          const newSlice = dataObj.choices[0].delta.content;
+
+          if (!newSlice) continue;
+
+          window.webContents.send(IPC.CHAT.STREAM_CHUNK, newSlice)
+        }
       }
 
       window.webContents.send(IPC.CHAT.STREAM_END)
     }
   )
 }
+
