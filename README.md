@@ -1,34 +1,41 @@
-# rotion
+# Rotion
+Rotion is a privacy-focused note-taking and knowledge management app inspired by Notion. All your notes are stored as Markdown files locally on your machine, ensuring complete control and offline access. The built-in AI assistant runs entirely on your device—no cloud required—so your data stays private.
 
-An Electron application with React and TypeScript
+## Features
+- 🔒 Local Markdown file storage for privacy and offline access
+- 🤖 On-device AI assistant for secure, private conversations
+- ⚡ Fast, cross-platform Electron desktop app (Windows, macOS, Linux)
+- 📝 Rich text editor for notes and documents
+- 🔍 Instant search across your notes
+- 🗂 Sidebar navigation for easy organization
+- 🧭 Table of Contents and breadcrumbs for document navigation
 
-## Recommended IDE Setup
+## Getting Started
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-
-## Project Setup
-
-### Install
-
+**Install dependencies:**
 ```bash
-$ npm install
+npm install
 ```
 
-### Development
-
+**Start development server:**
 ```bash
-$ npm run dev
+npm run dev
 ```
+Launches the Electron app in development mode with hot-reloading.
 
 ### Build
 
+Build the application for your operating system:
+
+**Windows**
 ```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
+npm run build:win
+```
+**macOS**
+```bash
+npm run build:mac
+```
+**Linux**
+```bash
+npm run build:linux
 ```
