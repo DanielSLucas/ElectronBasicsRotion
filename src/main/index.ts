@@ -56,11 +56,13 @@ if (process.platform === 'darwin') {
   app.dock?.setIcon(resolve(__dirname, 'icon.png'))
 }
 
-const server = new LlmServer("Qwen3-8B-Q4_K_M.gguf", "9099")
+const server = new LlmServer({ model: "Qwen3-8B-Q4_K_M.gguf", port: "9099" })
+const embeddingServer = new LlmServer({ 
+  model: "Qwen3-Embedding-0.6B-Q8_0.gguf", 
+  port: "9098",
+  additionalArgs: ["--embedding", "--pooling", "mean"]
+})
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
 
@@ -69,24 +71,18 @@ app.whenReady().then(() => {
   })
 
   createWindow()
-  server.start()  
+  server.start()
+  embeddingServer.start()
 
   app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     server.stop()
+    embeddingServer.stop()
     app.quit()
   }
 })
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

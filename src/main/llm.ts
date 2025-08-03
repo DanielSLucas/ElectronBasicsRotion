@@ -14,14 +14,22 @@ const MODELS_PATH = joinPath(appRootDir.get(), 'resources', 'models');
 // model = "Qwen3-8B-Q4_K_M.gguf"
 // embeddingModel = "Qwen3-Embedding-0.6B-Q8_0.gguf"
 
+export type LlmServerConstructorParams = {
+  model: string;
+  port: string;
+  additionalArgs?: string[];
+}
+
 export class LlmServer {
   private _model: string;
   private _port: string;
+  private _additionalArgs: string[];
   private server?: ChildProcess
 
-  constructor(model: string, port: string) {
+  constructor({ model, port, additionalArgs = [] }:LlmServerConstructorParams ) {
     this._model = model;
     this._port = port;
+    this._additionalArgs = additionalArgs;
   }
 
   public start() {
@@ -35,7 +43,8 @@ export class LlmServer {
       '-m',
       joinPath(MODELS_PATH, this._model),
       '--port',
-      this._port
+      this._port,
+      ...this._additionalArgs
     ];
     return { execPath, args };
   }
