@@ -4,6 +4,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Typography from '@tiptap/extension-typography'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { useCallback, useRef, useEffect } from 'react'
 
 export type OnContentUpdatedParams = {
   title: string;
@@ -12,10 +13,23 @@ export type OnContentUpdatedParams = {
 
 type EditorProps = {
   content: string;
-  onContentUpdated: (params: OnContentUpdatedParams) => void
+  onContentUpdated: (params: OnContentUpdatedParams) => void;
+  debounceMs?: number;
 }
 
-export function Editor({ content, onContentUpdated }: EditorProps) {
+export function Editor({ content, onContentUpdated, debounceMs = 500 }: EditorProps) {
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+
+  const debouncedOnContentUpdated = useCallback((params: OnContentUpdatedParams) => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      onContentUpdated(params)
+    }, debounceMs)
+  }, [onContentUpdated, debounceMs])
+
   const editor = useEditor({
     extensions: [
       Document.extend({
@@ -37,7 +51,7 @@ export function Editor({ content, onContentUpdated }: EditorProps) {
 
       const title = parsedContent?.title ?? 'Untitled'
       const content = parsedContent?.content ?? ''
-      onContentUpdated({ title, content })
+      debouncedOnContentUpdated({ title, content })
     },
     content,
     autofocus: 'end',
@@ -47,6 +61,15 @@ export function Editor({ content, onContentUpdated }: EditorProps) {
       },
     },
   })
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [])
 
   return (
     <EditorContent className="w-[65ch]" editor={editor} />

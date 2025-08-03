@@ -1,34 +1,36 @@
 import clsx from 'clsx'
-import { Code, CaretDoubleRight, TrashSimple } from 'phosphor-react'
+import { Code, CaretDoubleRight, Trash, FloppyDisk } from 'phosphor-react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 
 import * as Breadcrumbs from './Breadcrumbs'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Document } from '@shared/types/ipc'
+import { useCurrentDocument } from '../../hooks/useCurrentDocument'
+import { Spinner } from '../Spinner'
 
 type HeaderProps = {
   isSidebarOpen: boolean
 }
 
 export function Header({ isSidebarOpen }: HeaderProps) {
-  const queryClient = useQueryClient()
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+  const { 
+    document, 
+    deleteDocument: delDoc,
+    forceSave,
+    isSaving,
+    isDeleting,
+    setCurrentDocumentId, 
+    isOperationDisabled 
+  } = useCurrentDocument()
 
   const isMacOS = process.platform === 'darwin'
 
-  const { mutateAsync: deleteDocument, isPending } = useMutation({
-    mutationFn: async () => {
-      await window.api.deleteDocument({ id: id! })
-    },
-    onSuccess: () => {
-      queryClient.setQueryData<Document[]>(['documents'], (documents) => {
-        return documents!.filter(doc => doc.id !== id)
-      })
-      navigate('/')
-    },
-  })
+  const deleteDocument = async () => {
+    await delDoc();
+    navigate('/')
+    setCurrentDocumentId(null)
+  }
 
   return (
     <div
@@ -63,17 +65,23 @@ export function Header({ isSidebarOpen }: HeaderProps) {
             <Breadcrumbs.Separator />
             <Breadcrumbs.Item>Back-end</Breadcrumbs.Item>
             <Breadcrumbs.Separator />
-            <Breadcrumbs.Item isActive>Untitled</Breadcrumbs.Item>
+            <Breadcrumbs.Item isActive>{document?.name || 'Untitled'}</Breadcrumbs.Item>
           </Breadcrumbs.Root>
 
-          <div className="inline-flex region-no-drag">
+          <div className="inline-flex region-no-drag gap-1">
+            <button
+              onClick={() => forceSave()}
+              disabled={isOperationDisabled}
+              className="rounded p-2 bg-rotion-500 inline-flex items-center gap-1 text-rotion-100 text-sm hover:text-rotion-50 hover:bg-rotion-400 disabled:opacity-60  transition-colors duration-200"
+            >
+              {isSaving ? <Spinner/> : <FloppyDisk className="h-4 w-4" />}
+            </button>
             <button
               onClick={() => deleteDocument()}
-              disabled={isPending}
-              className="inline-flex items-center gap-1 text-rotion-100 text-sm hover:text-rotion-50 disabled:opacity-60"
+              disabled={isOperationDisabled}
+              className="rounded p-2 bg-rotion-500 inline-flex items-center gap-1 text-rotion-100 text-sm hover:text-rotion-50 hover:bg-rotion-400 disabled:opacity-60  transition-colors duration-200"
             >
-              <TrashSimple className="h-4 w-4" />
-              Apagar
+              {isDeleting ? <Spinner/> : <Trash className="h-4 w-4" />}
             </button>
           </div>
         </>

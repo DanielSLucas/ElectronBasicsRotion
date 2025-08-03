@@ -1,50 +1,26 @@
 import { useParams } from 'react-router-dom'
 import { Editor, OnContentUpdatedParams } from '../components/Editor'
 import { ToC } from '../components/ToC'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useMemo } from 'react'
-import { Document as IPCDocument } from '@shared/types/ipc'
+import { useEffect, useMemo } from 'react'
+import { useCurrentDocument } from '../hooks/useCurrentDocument'
 
 export function Document() {
-  const queryClient = useQueryClient()
   const { id } = useParams<{ id: string }>()
-
-  const { data, isFetching } = useQuery({
-    queryKey: ['document', id],
-    queryFn: async () => {
-      const response = await window.api.fetchDocument({ id: id! })
-      return response?.data
-    },
-  })
-
-  const { mutateAsync: saveDocument } = useMutation({
-    mutationFn: async ({ title, content }: OnContentUpdatedParams) => {
-      await window.api.saveDocument({
-        id: id!,
-        name: title,
-        content,
-      })
-    },
-    onSuccess: (_, { title }) => {
-      queryClient.setQueryData<IPCDocument[]>(['documents'], (documents) => {
-        return documents?.map(doc => {
-          return doc.id === id
-            ? { ...doc, name: title }
-            : doc
-        })
-      })
-    },
-  })
+  const { document, isFetching, saveDocument, setCurrentDocumentId } = useCurrentDocument()
+  
+  useEffect(() => {
+    setCurrentDocumentId(id!)
+  }, [id])
 
   const initialContent = useMemo(() => {
-    if (data) {
-      return `<h1>${data.name}</h1>${data.content ?? '<p></p>'}`
+    if (document) {
+      return `<h1>${document.name}</h1>${document.content ?? '<p></p>'}`
     }
     return ''
-  }, [data])
+  }, [document])
 
-  function handleEditorContentUpdated({ title, content }: OnContentUpdatedParams) {
-    saveDocument({ title, content })
+  function handleEditorContentUpdated(params: OnContentUpdatedParams) {
+    saveDocument(params)
   }
 
   return (
@@ -64,10 +40,11 @@ export function Document() {
       </aside>
 
       <section className="flex-1 flex flex-col items-center">
-        {!isFetching && data && (
+        {!isFetching && document && (
           <Editor
             content={initialContent}
             onContentUpdated={handleEditorContentUpdated}
+            debounceMs={5000}
           />
         )}
       </section>
