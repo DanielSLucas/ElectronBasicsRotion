@@ -1,9 +1,16 @@
 import fs from 'node:fs/promises'
-import { FEntry, FFile, FType } from '../shared/types/ipc'
+import { Document, FEntry, FFile, FType } from '../shared/types/ipc'
 import { join, resolve } from 'node:path'
 
 export function flattenFiles (files: FEntry[]): FFile[] {
   return files.flatMap(f => f.type === FType.FOLDER ? flattenFiles(f.content) : f)
+}
+
+export async function getDocuments(dirpath: string): Promise<Document[]> {
+  const files = flattenFiles(await getDirContent(dirpath))
+  return Promise.all(
+    files.map(async (f) => ({...f, content: await getFileContent(f.path)}))
+  )
 }
 
 export async function getDirContent(dirPath: string): Promise<FEntry[]> {

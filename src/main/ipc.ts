@@ -1,4 +1,6 @@
 import { BrowserWindow, dialog, ipcMain } from 'electron'
+import { ChatOpenAI } from '@langchain/openai'
+
 import { IPC } from '@shared/constants/ipc'
 import {
   CreateDocumentResponse,
@@ -18,7 +20,7 @@ import {
   getDocuments, 
   updateDocument 
 } from './file_handling'
-import { createGraph } from './rag'
+import { similaritySearch } from './rag'
 
 ipcMain.handle(
   IPC.WORK_DIR.GET,
@@ -136,48 +138,29 @@ export function createChatHandler(window: BrowserWindow) {
   ipcMain.handle(
     IPC.CHAT.STREAM_START,
     async (_, messages: {role: string; content: string}[]): Promise<void> => {
-      // const res = await fetch('http://localhost:9099/v1/chat/completions', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({
-      //     stream: true,
-      //     messages,
-      //     model: 'default'
-      //   })
-      // });
-      
-      // const decoder = new TextDecoder('utf-8');
-      // const readable = res.body!.getReader()
+      const lastMessage = messages.pop()!
 
-      // while (true) {
-      //   const { done, value } = await readable!.read();
-      //   if (done) break;
+      const workDir = store.get('workDir')
+      const files = await getDocuments(workDir);
 
-      //   const data = decoder.decode(value);
-      //   const lines = data.split(/^data:\s/m);
+      const llm = new ChatOpenAI({
+        modelName: "default",
+        apiKey: 'fake-key',
+        configuration: {
+          baseURL: "http://localhost:9099/v1",
+        },
+      });
 
-      //   for (const line of lines) {
-      //     if (!line || line === "[DONE]\n\n") continue;
+      const relatedDocs = await similaritySearch(files, lastMessage.content)
+      const context = relatedDocs.map(doc => JSON.stringify(doc))
 
-      //     const dataObj = JSON.parse(line);
-      //     const newSlice = dataObj.choices[0].delta.content;
-
-      //     if (!newSlice) continue;
-
-      //     window.webContents.send(IPC.CHAT.STREAM_CHUNK, newSlice)
-      //   }
-      // }
-
-      const graph = await createGraph()
-
-      const stream = await graph.stream({ question: messages[messages.length-1].content })
+      const stream = await llm.stream([
+        ...messages,
+        { ...lastMessage, content: `${lastMessage.content}\n---\nRelatedDocs: ${context}` }
+      ])
 
       for await (const chunk of stream) {
-        if (chunk?.generate?.answer) {
-          window.webContents.send(IPC.CHAT.STREAM_CHUNK, chunk.generate.answer)
-        }
+        window.webContents.send(IPC.CHAT.STREAM_CHUNK, chunk.content)
       }
 
       window.webContents.send(IPC.CHAT.STREAM_END)
