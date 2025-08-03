@@ -13,7 +13,7 @@ export function Document() {
     queryKey: ['document', id],
     queryFn: async () => {
       const response = await window.api.fetchDocument({ id: id! })
-      return response.data
+      return response?.data
     },
   })
 
@@ -21,7 +21,7 @@ export function Document() {
     mutationFn: async ({ title, content }: OnContentUpdatedParams) => {
       await window.api.saveDocument({
         id: id!,
-        title,
+        name: title,
         content,
       })
     },
@@ -29,7 +29,7 @@ export function Document() {
       queryClient.setQueryData<IPCDocument[]>(['documents'], (documents) => {
         return documents?.map(doc => {
           return doc.id === id
-            ? { ...doc, title }
+            ? { ...doc, name: title }
             : doc
         })
       })
@@ -38,7 +38,7 @@ export function Document() {
 
   const initialContent = useMemo(() => {
     if (data) {
-      return `<h1>${data.title}</h1>${data.content ?? '<p></p>'}`
+      return `<h1>${data.name}</h1>${data.content ?? '<p></p>'}`
     }
     return ''
   }, [data])
