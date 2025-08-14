@@ -13,6 +13,12 @@ export async function getDocuments(dirpath: string): Promise<Document[]> {
   )
 }
 
+export function filterByFileTypes(files: FEntry[], fileExtensions: String[]): FEntry[] {
+  return files
+    .map(f => f.type === FType.FILE ? f : { ...f, content: filterByFileTypes(f.content, fileExtensions) })
+    .filter(f => (f.type === FType.FOLDER && !f.name.startsWith(".")) || fileExtensions.includes(f.name.split(".")[1]))
+}
+
 export async function getDirContent(dirPath: string): Promise<FEntry[]> {
   const dirContent = await fs.readdir(dirPath)
   return Promise.all(dirContent.map(fName => getFProps(dirPath, fName)))
