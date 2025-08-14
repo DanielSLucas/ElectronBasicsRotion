@@ -24,7 +24,7 @@ export function Document() {
   }
 
   return (
-    <main className="flex-1 flex py-12 px-10 gap-8">
+    <main className="flex-1 flex py-12 px-10 gap-8 min-h-0 overflow-y-auto">
       <aside className="hidden lg:block sticky top-0">
         <span className="text-rotion-300 font-semibold text-xs">
           TABLE OF CONTENTS

@@ -23,7 +23,14 @@ export function CollapsibleSection({ content, name }: LinkProps) {
         }
       )}
     >
-      <Collapsible.Trigger className="flex items-left justify-between text-sm gap-2 text-rotion-100 hover:text-rotion-50 py-1 px-3 rounded group hover:bg-rotion-700">
+      <Collapsible.Trigger 
+        className={clsx(
+          "flex items-left justify-between text-sm gap-2 text-rotion-100 hover:text-rotion-50 py-1 px-3 rounded group hover:bg-rotion-700",
+          {
+            "border-1 border-rotion-500": isSectionOpen
+          }
+        )}
+      >
         <strong className="truncate">{name}</strong>
 
         <div className="flex items-center h-full group-hover:visible ml-auto text-rotion-100 px-px">

@@ -57,7 +57,7 @@ export function Editor({ content, onContentUpdated, debounceMs = 500 }: EditorPr
     autofocus: 'end',
     editorProps: {
       attributes: {
-        class: 'focus:outline-none prose prose-invert prose-headings:mt-0',
+        class: 'pb-8 focus:outline-none prose prose-invert prose-headings:mt-0',
       },
     },
   })
