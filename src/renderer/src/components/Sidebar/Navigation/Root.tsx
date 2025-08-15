@@ -7,7 +7,7 @@ interface RootProps {
 export function Root(props: RootProps) {
   return (
     <nav
-      className="flex mx-2 flex-col gap-8 pb-4 text-rotion-100 scrollbar-hidden"
+      className="flex mx-2 flex-col gap-8 text-rotion-100 flex-1 overflow-hidden"
       {...props}
     />
   )
