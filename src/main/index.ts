@@ -10,6 +10,9 @@ import { createTray } from './tray'
 import { createShortcuts } from './shortcuts'
 import { LlmServer } from './llm'
 import { createChatHandler } from './ipc'
+import { vectorStore } from './rag'
+import { getDocuments } from './file_handling'
+import { store } from './store'
 
 function createWindow(): void {
   // Create the browser window.
@@ -73,6 +76,8 @@ app.whenReady().then(() => {
   createWindow()
   server.start()
   embeddingServer.start()
+  getDocuments(store.get("workDir"))
+    .then(docs => vectorStore.start(docs))
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -83,6 +88,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     server.stop()
     embeddingServer.stop()
+    vectorStore.stop()
     app.quit()
   }
 })

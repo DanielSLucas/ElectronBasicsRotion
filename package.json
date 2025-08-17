@@ -42,6 +42,7 @@
     "cmdk": "^1.1.1",
     "electron-router-dom": "^2.1.0",
     "electron-store": "^10.1.0",
+    "faiss-node": "^0.5.1",
     "langchain": "^0.3.30",
     "phosphor-react": "^1.4.1",
     "react": "^19.1.0",

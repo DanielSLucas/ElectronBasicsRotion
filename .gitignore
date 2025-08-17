@@ -5,3 +5,4 @@ out
 .eslintcache
 *.log*
 *.gguf
+resources/db/*

@@ -1,8 +1,17 @@
+import { join } from "path";
+import { existsSync } from "node:fs";
+import { stat } from "node:fs/promises";
+
+import AppRootDir from "app-root-dir";
+import { Embeddings } from "@langchain/core/embeddings";
+import { DocumentInterface } from "@langchain/core/documents";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { FaissStore } from "@langchain/community/vectorstores/faiss";
 import { OpenAIEmbeddings } from "@langchain/openai";
 
 import { Document } from "../shared/types/ipc";
+
+const VEC_STORE_DIR = join(AppRootDir.get(), 'resources', 'db');
 
 const embeddings = new OpenAIEmbeddings({
   modelName: "default",
@@ -13,19 +22,126 @@ const embeddings = new OpenAIEmbeddings({
 });
 
 const mdSplitter = RecursiveCharacterTextSplitter.fromLanguage("markdown", {
-  chunkSize: 1000,
+  chunkSize: 500,
   chunkOverlap: 100,
 });
 
-export async function similaritySearch(files: Document[], question: string) {
-  const vectorStore = new MemoryVectorStore(embeddings);
+class VectorStore {
+  private _store?: FaissStore;
+  private storeFName = 'docstore.json';
 
-  const documents = (await Promise.all(files.map(async (f) => {
-    const mdDocs = await mdSplitter.createDocuments([f.content]);
-    return mdDocs.map(doc =>({ ...doc, metadata: { ...f, ...doc.metadata } }))
-  }))).flat()
+  constructor(
+    private storePath: string, 
+    private emb: Embeddings
+  ) {}
 
-  await vectorStore.addDocuments(documents)
+  private get store(): FaissStore {
+    if (!this._store) {
+      throw new Error("Vector store has not been initialized. Please call start() before using the store.");
+    }
 
-  return vectorStore.similaritySearch(question)
+    return this._store;
+  }
+
+  async start(docs: Document[]) {
+    const storeFile = join(this.storePath, this.storeFName);
+    if (!existsSync(storeFile)) {
+      this._store = new FaissStore(this.emb, {});
+      await this.addDocs(docs);
+      return;
+    }
+    
+    this._store = await FaissStore.load(this.storePath, this.emb)
+    
+    await this.syncDocumentEmbeddings(storeFile, docs);
+  }
+
+  private async syncDocumentEmbeddings(storeFile: string, docs: Document[]) {
+    const storeFileStat = await stat(storeFile);
+
+    const docsToUpdate = docs.filter(
+      doc => new Date(doc.updatedAt).getTime() > storeFileStat.mtime.getTime()
+    );
+
+    console.log({docsToUpdate})
+
+    this.updateDocsEmbeddings(docsToUpdate);
+  }
+
+  async stop() {
+    return this.persist()
+  }
+
+  async addDocs(docs: Document[]) {
+    const documents = (await Promise.all(docs.map(async (f) => {
+      const mdDocs = await mdSplitter.createDocuments([f.content]);
+      const { content, ...fileMetadata } = f;
+      return mdDocs.map(doc => ({
+        ...doc,
+        metadata: {
+          ...doc.metadata,
+          ...fileMetadata
+        }
+      }))
+    }))).flat()
+
+    const ids = documents.map(() => crypto.randomUUID());
+    
+    await this.store.addDocuments(
+      documents,
+      { ids }
+    )
+    await this.persist()
+  }
+
+  async similaritySearch(question: string, n_results = 5): Promise<DocumentInterface[]> {
+    return this.store.similaritySearch(question, n_results)
+  }
+
+  async listAll(): Promise<DocumentInterface[]> {
+    const retriver = this.store.asRetriever();
+    return retriver.invoke(" ");
+  }
+
+  private async persist() {
+    return this.store.save(this.storePath)
+  }
+
+  async updateDocEmbeddings(doc: Document) {
+    const retriver = this.store.asRetriever();
+    const results = await retriver.invoke(" ");
+    const docs = results.filter(d => d.metadata.id === doc.id)
+
+    const ids = docs.map(d => d.id!)
+
+    await this.store.delete({ ids })
+
+    await this.addDocs([doc])
+    
+    await this.persist()
+  }
+
+  async updateDocsEmbeddings(docs: Document[]) {
+    const docsIds = docs.map(d => d.id);
+    const retriver = this.store.asRetriever();
+    const results = await retriver.invoke(" ");
+
+    const docsToDelete = results.filter(d => docsIds.includes(d.metadata.id))
+    const storeIds = docsToDelete.map(d => d.id!)
+
+    console.log({
+      docsIds,
+      results,
+      docsToDelete,
+      storeIds
+    })
+
+    await this.store.delete({ ids: storeIds })
+
+    await this.addDocs(docs)
+    
+    await this.persist()
+  }
 }
+
+export const vectorStore = new VectorStore(VEC_STORE_DIR, embeddings);

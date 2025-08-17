@@ -20,7 +20,7 @@ import {
   getDocuments, 
   updateDocument 
 } from './file_handling'
-import { similaritySearch } from './rag'
+import { vectorStore } from './rag'
 
 ipcMain.handle(
   IPC.WORK_DIR.GET,
@@ -151,8 +151,10 @@ export function createChatHandler(window: BrowserWindow) {
         },
       });
 
-      const relatedDocs = await similaritySearch(files, lastMessage.content)
+      vectorStore.addDocs(files);
+      const relatedDocs = await vectorStore.similaritySearch(lastMessage.content)
       const context = relatedDocs.map(doc => JSON.stringify(doc))
+      console.log(context);
 
       const stream = await llm.stream([
         ...messages,
