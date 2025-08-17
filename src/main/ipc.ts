@@ -18,7 +18,8 @@ import {
   getDirContent, 
   getFileContent, 
   getDocuments, 
-  updateDocument 
+  updateDocument, 
+  filterByFileTypes
 } from './file_handling'
 import { vectorStore } from './rag'
 
@@ -50,9 +51,14 @@ ipcMain.handle(
   IPC.DOCUMENTS.FETCH_ALL,
   async (): Promise<FetchAllDocumentsResponse> => {
     const workDir = store.get('workDir')
+    // const allowedFileExtensions = store.get('allowedFileExtensions')
+    const allowedFileExtensions = ["md", "txt"]
+
+    const documents = await getDirContent(workDir);
+    const filtered = filterByFileTypes(documents, allowedFileExtensions)
 
     return {
-      data: await getDirContent(workDir),
+      data: filtered,
     }
   },
 )

@@ -27,7 +27,7 @@ export function ChatMessageComponent({ msg, isLoading, isLast }: Props) {
         
       {msg.thinking && (
         <Collapsible.Root defaultOpen>
-          <Collapsible.Trigger className={clsx('text-xs text-rotion-300 flex items-center p-1 rounded hover:bg-rotion-600 hover:text-rotion-100 transition-colors duration-200', { "animate-pulse": isLoading })}>
+          <Collapsible.Trigger className={clsx('text-xs text-rotion-300 flex items-center p-1 pl-2 rounded hover:bg-rotion-600 hover:text-rotion-100 transition-colors duration-200', { "animate-pulse": isLoading })}>
             Pensamentos
             <CaretDown className="ml-2 h-3 w-3"/>
           </Collapsible.Trigger>
