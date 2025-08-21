@@ -63,8 +63,6 @@ class VectorStore {
       doc => new Date(doc.updatedAt).getTime() > storeFileStat.mtime.getTime()
     );
 
-    console.log({docsToUpdate})
-
     this.updateDocsEmbeddings(docsToUpdate);
   }
 
@@ -86,11 +84,17 @@ class VectorStore {
     }))).flat()
 
     const ids = documents.map(() => crypto.randomUUID());
+
+    const pageSize = 50;
+    const pages = Math.ceil(documents.length / pageSize);
+
+    for (let i = 0; i < pages; i++) {
+      await this.store.addDocuments(
+        documents.slice(i * pageSize, (i + 1) * pageSize),
+        { ids: ids.slice(i * pageSize, (i + 1) * pageSize) }
+      )
+    }
     
-    await this.store.addDocuments(
-      documents,
-      { ids }
-    )
     await this.persist()
   }
 
@@ -129,18 +133,21 @@ class VectorStore {
     const docsToDelete = results.filter(d => docsIds.includes(d.metadata.id))
     const storeIds = docsToDelete.map(d => d.id!)
 
-    console.log({
-      docsIds,
-      results,
-      docsToDelete,
-      storeIds
-    })
-
     await this.store.delete({ ids: storeIds })
 
     await this.addDocs(docs)
     
     await this.persist()
+  }
+
+  async deleteDoc(docId: string) {
+    const retriver = this.store.asRetriever();
+    const results = await retriver.invoke(" ");
+
+    const docsToDelete = results.filter(d => d.metadata.id === docId)
+    const storeIds = docsToDelete.map(d => d.id!)
+
+    await this.store.delete({ ids: storeIds })
   }
 }
 

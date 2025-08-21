@@ -76,8 +76,15 @@ app.whenReady().then(() => {
   createWindow()
   server.start()
   embeddingServer.start()
-  getDocuments(store.get("workDir"))
-    .then(docs => vectorStore.start(docs))
+  
+  console.time("Vector store started")
+  setTimeout(() => {
+    console.log("Starting vector store")
+    getDocuments(store.get("workDir"))
+      .then(docs => vectorStore.start(docs))
+      .then(() => console.timeEnd("Vector store started"))
+      .catch((err) => console.log("Failed to start vector store\n", err))
+  }, 15000)
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

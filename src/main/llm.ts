@@ -1,18 +1,24 @@
-import { join as joinPath, dirname } from 'path';
-import { ChildProcess, spawn } from 'child_process';
+import { join as joinPath, dirname } from 'node:path';
+import { ChildProcess, spawn } from 'node:child_process';
+import { ChatOpenAI } from '@langchain/openai';
 
 import appRootDir from 'app-root-dir';
 
 import { getPlatform } from './get_platform';
+
+export const llm = new ChatOpenAI({
+  modelName: "default",
+  apiKey: 'fake-key',
+  configuration: {
+    baseURL: "http://localhost:9099/v1",
+  },
+});
 
 const EXEC_PATH = (process.env.name === 'production') ?
   joinPath(dirname(appRootDir.get()), 'bin'):
   joinPath(appRootDir.get(), 'resources', getPlatform());
 
 const MODELS_PATH = joinPath(appRootDir.get(), 'resources', 'models');
-
-// model = "Qwen3-8B-Q4_K_M.gguf"
-// embeddingModel = "Qwen3-Embedding-0.6B-Q8_0.gguf"
 
 export type LlmServerConstructorParams = {
   model: string;

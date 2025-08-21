@@ -22,6 +22,7 @@ import {
   filterByFileTypes
 } from './file_handling'
 import { vectorStore } from './rag'
+import { llm } from './llm'
 
 ipcMain.handle(
   IPC.WORK_DIR.GET,
@@ -100,6 +101,8 @@ ipcMain.handle(
 
     const doc = await createDocument(workDir, `Untitled ${untitledFiles.length + 1}`)
 
+    vectorStore.addDocs([{ ...doc, content: "" }]);
+
     return {
       data: doc,
     }
@@ -119,7 +122,9 @@ ipcMain.handle(
       return
     }
 
-    await updateDocument(file.path, name, content)
+    const doc = await updateDocument(file.path, name, content)
+
+    vectorStore.updateDocEmbeddings({ ...doc, content })
   },
 )
 
@@ -136,7 +141,9 @@ ipcMain.handle(
       return
     }
 
-    deleteDocument(file.path)
+    await deleteDocument(file.path)
+
+    await vectorStore.deleteDoc(id)
   },
 )
 
@@ -149,18 +156,9 @@ export function createChatHandler(window: BrowserWindow) {
       const workDir = store.get('workDir')
       const files = await getDocuments(workDir);
 
-      const llm = new ChatOpenAI({
-        modelName: "default",
-        apiKey: 'fake-key',
-        configuration: {
-          baseURL: "http://localhost:9099/v1",
-        },
-      });
-
       vectorStore.addDocs(files);
       const relatedDocs = await vectorStore.similaritySearch(lastMessage.content)
       const context = relatedDocs.map(doc => JSON.stringify(doc))
-      console.log(context);
 
       const stream = await llm.stream([
         ...messages,
