@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises'
-import { Document, FEntry, FFile, FType } from '../shared/types/ipc'
+import { Document, FEntry, FFile, FType } from '../../shared/types/ipc'
 import { join, resolve } from 'node:path'
 
 export function flattenFiles (files: FEntry[]): FFile[] {

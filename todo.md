@@ -1,10 +1,11 @@
 ## Back-end (ipc)
-- ⁠[ ] fazer o embedding no salvamento
-- ⁠[ ] persistir o embedding de outra maneira ao invés da memória (sqlite vector store?)
-- [ ] fazer o embedding do documento ao salva-lo
-- [ ] fazer embeddings quando a pasta for selecionada ou quando aplicação iniciar
-- [ ] filtrar tipo de documento que aplicação pode usar (apenas `.md`)
-- [ ] fazer a escolhada dos binarios do llama.cpp de acordo com a plataforma
+- ⁠[x] fazer o embedding no salvamento
+- ⁠[x] persistir o embedding de outra maneira ao invés da memória
+- [x] fazer o embedding do documento ao salva-lo
+- [x] sincronizar embeddings quando a aplicação iniciar
+- [x] filtrar tipo de documento que aplicação pode usar (apenas `.md`)
+- [ ] fazer embeddings quando a pasta for selecionada (apagar anterior? só adionar no vector store?)
+- [ ] baixar binários do llama.ccp de acordo com a plataforma e executa-los
 
 ## Document
 - [x] debounce ao salvar documentos

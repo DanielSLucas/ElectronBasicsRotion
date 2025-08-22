@@ -1,5 +1,4 @@
 import { BrowserWindow, dialog, ipcMain } from 'electron'
-import { ChatOpenAI } from '@langchain/openai'
 
 import { IPC } from '@shared/constants/ipc'
 import {
@@ -10,19 +9,19 @@ import {
   FetchDocumentResponse,
   SaveDocumentRequest,
 } from '@shared/types/ipc'
-import { store } from './store'
-import { 
-  createDocument, 
-  deleteDocument, 
-  flattenFiles, 
-  getDirContent, 
-  getFileContent, 
-  getDocuments, 
-  updateDocument, 
-  filterByFileTypes
-} from './file_handling'
-import { vectorStore } from './rag'
-import { llm } from './llm'
+import { store } from '../app/store'
+import {
+  createDocument,
+  deleteDocument,
+  flattenFiles,
+  getDirContent,
+  getFileContent,
+  getDocuments,
+  updateDocument,
+  filterByFileTypes,
+} from '../services/file_handling'
+import { vectorStore } from '../services/rag'
+import { llm } from '../services/llm'
 
 ipcMain.handle(
   IPC.WORK_DIR.GET,

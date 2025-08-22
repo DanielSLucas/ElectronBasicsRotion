@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Store from 'electron-store'
-import { Document } from '../shared/types/ipc'
+import { Document } from '../../shared/types/ipc'
 
 type StoreType = {
   workDir: string;

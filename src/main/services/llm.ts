@@ -4,7 +4,7 @@ import { ChatOpenAI } from '@langchain/openai';
 
 import appRootDir from 'app-root-dir';
 
-import { getPlatform } from './get_platform';
+import { getPlatform } from '../utils/get_platform';
 
 export const llm = new ChatOpenAI({
   modelName: "default",

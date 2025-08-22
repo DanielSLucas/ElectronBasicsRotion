@@ -9,7 +9,7 @@ import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { FaissStore } from "@langchain/community/vectorstores/faiss";
 import { OpenAIEmbeddings } from "@langchain/openai";
 
-import { Document } from "../shared/types/ipc";
+import { Document } from "../../shared/types/ipc";
 
 const VEC_STORE_DIR = join(AppRootDir.get(), 'resources', 'db');
 
